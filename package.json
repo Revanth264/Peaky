@@ -1,0 +1,45 @@
+{
+  "name": "peakime-store",
+  "version": "1.0.0",
+  "description": "Peakime Store - Complete Anime Merchandise E-commerce Platform (Firestore Only)",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@google-cloud/recaptcha-enterprise": "^6.3.1",
+    "@hookform/resolvers": "^3.9.0",
+    "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.5.0",
+    "firebase-admin": "^13.5.0",
+    "framer-motion": "^12.23.22",
+    "intl-tel-input": "^25.12.4",
+    "next": "^15.5.4",
+    "razorpay": "^2.9.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-hook-form": "^7.54.0",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.4.0",
+    "react-image-gallery": "^1.3.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-rating-stars-component": "^2.2.0",
+    "react-select": "^5.8.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.5.4",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.7.2"
+  }
+}

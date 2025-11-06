@@ -1,0 +1,36 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function authed() {
+      return request.auth != null;
+    }
+    
+    function verified() {
+      return !(request.auth.token.email is string) || request.auth.token.email_verified == true;
+    }
+    
+    // User avatars
+    match /avatars/{userId}/{allPaths=**} {
+      allow read: if true; // Public read
+      allow write: if authed() && verified() && request.auth.uid == userId;
+    }
+    
+    // Product images
+    match /products/{allPaths=**} {
+      allow read: if true; // Public read
+      allow write: if authed() && verified(); // Only verified users can upload
+    }
+    
+    // User uploads
+    match /uploads/{userId}/{allPaths=**} {
+      allow read, write: if authed() && verified() && request.auth.uid == userId;
+    }
+    
+    // Default: deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

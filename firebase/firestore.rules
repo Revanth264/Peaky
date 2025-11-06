@@ -1,0 +1,151 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.role == 'admin';
+    }
+    
+    function isValidHandle(handle) {
+      return handle.matches('^[a-z0-9_]{3,20}$');
+    }
+    
+    // Products - Public read, admin write
+    match /products/{productId} {
+      allow read: if true; // Public read
+      allow write: if isAdmin(); // Only admins can write
+      
+      // Validate product schema on write
+      allow create: if isAdmin() && 
+        request.resource.data.keys().hasAll(['productId', 'name', 'price', 'createdAt']) &&
+        request.resource.data.productId is string &&
+        request.resource.data.name is string &&
+        request.resource.data.price is number &&
+        request.resource.data.price > 0;
+      
+      allow update: if isAdmin() && 
+        !('productId' in request.resource.data.diff(resource.data).affectedKeys()) &&
+        !('createdAt' in request.resource.data.diff(resource.data).affectedKeys());
+    }
+    
+    // Materialized lists - Public read, Functions write only
+    match /materialized/{listId} {
+      allow read: if true; // Public read
+      allow write: if false; // Only Functions can write
+    }
+    
+    // User profiles - Owner read/write
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) || isAdmin();
+      
+      // Profile subcollection
+      match /profile/{profileId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && 
+          request.resource.data.uid == userId &&
+          request.resource.data.keys().hasAll(['uid', 'email']) &&
+          (!('handle' in request.resource.data) || isValidHandle(request.resource.data.handle));
+        allow update: if isOwner(userId) && 
+          !('uid' in request.resource.data.diff(resource.data).affectedKeys()) &&
+          (!('handle' in request.resource.data.diff(resource.data)) || isValidHandle(request.resource.data.handle));
+        allow delete: if false; // Profiles cannot be deleted
+      }
+      
+      // Addresses - Owner read/write
+      match /addresses/{addressId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && 
+          request.resource.data.keys().hasAll(['name', 'phone', 'addressLine1', 'city', 'state', 'pincode', 'country']);
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+      
+      // Cart - Owner read/write
+      match /cart/{cartId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if isOwner(userId);
+      }
+      
+      // Wishlist - Owner read/write
+      match /wishlist/{wishlistId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if isOwner(userId);
+      }
+      
+      // User orders mirror - Owner read, Functions write
+      match /orders/{orderId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if false; // Only Functions can write
+      }
+      
+      // User reviews mirror - Owner read, Functions write
+      match /reviews/{reviewId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if false; // Only Functions can write
+      }
+    }
+    
+    // Orders - Owner or admin read, Functions write only
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() && (
+        resource.data.uid == request.auth.uid || 
+        isAdmin()
+      );
+      allow write: if false; // Only Functions can write orders
+    }
+    
+    // Reviews - Public read approved, verified purchase write
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      allow create: if isAuthenticated() && 
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.keys().hasAll(['productId', 'rating', 'comment', 'status']) &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.rating is int &&
+        request.resource.data.rating >= 1 &&
+        request.resource.data.rating <= 5;
+      allow update: if isAdmin(); // Only admins can moderate
+      allow delete: if false; // Reviews cannot be deleted
+    }
+    
+    // Events - Write only (no reads)
+    match /events/{eventId} {
+      allow read: if false; // Events are private
+      allow create: if isAuthenticated() && 
+        request.resource.data.keys().hasAll(['type', 'ts']) &&
+        request.resource.data.type in ['view', 'click', 'wishlist_add', 'cart_add', 'purchase'] &&
+        (!('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid);
+      allow update, delete: if false;
+    }
+    
+    // Coupons - Public read, admin write
+    match /coupons/{couponCode} {
+      allow read: if true; // Public read
+      allow write: if isAdmin();
+      
+      // Validate coupon schema
+      allow create: if isAdmin() && 
+        request.resource.data.keys().hasAll(['code', 'type', 'value', 'validFrom', 'validUntil']) &&
+        request.resource.data.type in ['percent', 'flat'] &&
+        request.resource.data.value is number &&
+        request.resource.data.value > 0;
+    }
+    
+    // Inventory - Admin only
+    match /inventory/{productId} {
+      allow read: if isAdmin();
+      allow write: if false; // Only Functions can write inventory
+    }
+  }
+}
+

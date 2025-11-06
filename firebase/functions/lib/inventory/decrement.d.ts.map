@@ -1,0 +1,1 @@
+{"version":3,"file":"decrement.d.ts","sourceRoot":"","sources":["../../src/inventory/decrement.ts"],"names":[],"mappings":"AAAA;;GAEG;AAMH,UAAU,aAAa;IACrB,SAAS,EAAE,MAAM,CAAC;IAClB,QAAQ,EAAE,MAAM,CAAC;IACjB,QAAQ,EAAE,MAAM,CAAC;CAClB;AAED;;GAEG;AACH,wBAAsB,kBAAkB,CACtC,KAAK,EAAE,aAAa,EAAE,GACrB,OAAO,CAAC,IAAI,CAAC,CAuCf"}
