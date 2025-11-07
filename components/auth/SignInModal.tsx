@@ -63,7 +63,7 @@ export function SignInModal({ open, onOpenChange }: SignInModalProps) {
         <motion.div 
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.4 }}
           className={`flex-shrink-0 px-10 pt-10 pb-8 border-b transition-all duration-300 ${
             isScrolled 
               ? 'border-gray-200/60 dark:border-gray-800/60 shadow-sm bg-white dark:bg-gray-950' 
@@ -74,11 +74,10 @@ export function SignInModal({ open, onOpenChange }: SignInModalProps) {
             <DialogTitle 
               className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-clip-text text-transparent bg-[length:200%_auto]"
               key={authMode}
-              style={{
-                animation: 'gradient 3s ease infinite'
-              }}
             >
-              {authMode === 'signin' ? 'Welcome Back' : 'Join Peakime'}
+              <span style={{ animation: 'gradient 3s ease infinite' }}>
+                {authMode === 'signin' ? 'Welcome Back' : 'Join Peakime'}
+              </span>
             </DialogTitle>
             <DialogDescription 
               className="text-sm md:text-base mt-3 text-gray-600 dark:text-gray-400 leading-relaxed"
@@ -95,7 +94,7 @@ export function SignInModal({ open, onOpenChange }: SignInModalProps) {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.4, delay: 0.15 }}
           data-scroll-container="auth-modal"
           className="flex-1 px-10 py-10 overflow-y-auto overflow-x-hidden min-h-0 bg-white dark:bg-gray-950"
           style={{

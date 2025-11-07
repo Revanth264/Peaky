@@ -109,7 +109,7 @@ export default function PhoneInput({
       autoPlaceholder: "polite",
       separateDialCode: true,
       customPlaceholder: () => placeholder,
-    })
+    } as any)
     
     // Store instance on input element for easy access
     if (inputRef.current) {

@@ -39,7 +39,6 @@ const fieldVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
     },
   },
 }
@@ -93,8 +92,7 @@ export function EmailAuth({ onClose, onForgotPassword, onModeChange }: EmailAuth
         })
 
         if (result && result.status === 'VERIFY_EMAIL_SENT') {
-          toast.success('Verification email sent!', {
-            description: 'Please check your inbox and verify your email to continue.',
+          toast.success('Verification email sent! Please check your inbox and verify to continue.', {
             duration: 5000,
             style: {
               background: '#1f2937',
@@ -144,10 +142,6 @@ export function EmailAuth({ onClose, onForgotPassword, onModeChange }: EmailAuth
         if (errorCode === 'auth/email-already-in-use') {
           errorMessage = 'An account with this email already exists'
           toast.error(errorMessage, {
-            action: {
-              label: 'Sign In Instead',
-              onClick: () => setMode('signin'),
-            },
             style: {
               background: '#1f2937',
               color: '#fff',
@@ -168,25 +162,7 @@ export function EmailAuth({ onClose, onForgotPassword, onModeChange }: EmailAuth
         if (error.message === 'EMAIL_NOT_VERIFIED') {
           errorMessage = 'Please verify your email first'
           toast.error(errorMessage, {
-            description: 'Check your inbox for the verification link. Click below to resend.',
             duration: 6000,
-            action: {
-              label: 'Resend Email',
-              onClick: async () => {
-                try {
-                  const tempUser = await signInWithEmailAndPassword(auth, formData.email.trim().toLowerCase(), formData.password)
-                  await sendEmailVerification(tempUser.user, {
-                    url: typeof window !== 'undefined' ? `${window.location.origin}/verify-email` : undefined,
-                    handleCodeInApp: true,
-                  })
-                  await signOut(auth)
-                  toast.success('Verification email resent!')
-                } catch (resendError) {
-                  console.error('Error resending verification:', resendError)
-                  toast.error('Could not resend email. Please try again.')
-                }
-              },
-            },
             style: {
               background: '#1f2937',
               color: '#fff',
@@ -197,10 +173,6 @@ export function EmailAuth({ onClose, onForgotPassword, onModeChange }: EmailAuth
         } else if (errorCode === 'auth/user-not-found') {
           errorMessage = 'No account found with this email'
           toast.error(errorMessage, {
-            action: {
-              label: 'Sign Up',
-              onClick: () => setMode('signup'),
-            },
             style: {
               background: '#1f2937',
               color: '#fff',
@@ -211,10 +183,6 @@ export function EmailAuth({ onClose, onForgotPassword, onModeChange }: EmailAuth
         } else if (errorCode === 'auth/wrong-password') {
           errorMessage = 'Incorrect password'
           toast.error(errorMessage, {
-            action: {
-              label: 'Forgot Password?',
-              onClick: () => onForgotPassword?.(),
-            },
             style: {
               background: '#1f2937',
               color: '#fff',

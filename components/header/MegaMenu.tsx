@@ -33,7 +33,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.3 }}
             className="fixed top-16 sm:top-20 left-0 right-0 z-[100] bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg"
             onMouseLeave={onClose}
           >
@@ -50,7 +50,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                     onMouseLeave={() => setHoveredCategory(null)}
                   >
                     <Link
-                      href={category.children ? `/products?category=${category.key}` : category.key === 'new' ? '/#new-arrivals' : category.key === 'best' ? '/#best-sellers' : category.key === 'sale' ? '/#sale-offers' : '/products'}
+                      href={'children' in category ? `/products?category=${category.key}` : category.key === 'new' ? '/#new-arrivals' : category.key === 'best' ? '/#best-sellers' : category.key === 'sale' ? '/#sale-offers' : '/products'}
                       className="group block mb-3 sm:mb-4"
                       onClick={(e) => {
                         onClose()
@@ -71,13 +71,13 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
                           {category.label}
                         </h3>
-                        {category.children && (
+                        {'children' in category && (
                           <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-all duration-300 group-hover:translate-x-1" />
                         )}
                       </div>
                     </Link>
 
-                    {category.children && (
+                    {'children' in category && (
                       <motion.ul
                         initial={{ opacity: 0 }}
                         animate={{ 
@@ -86,7 +86,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                         transition={{ duration: 0.2 }}
                         className="space-y-2 sm:space-y-3"
                       >
-                        {category.children.map((child, childIdx) => (
+                        {(category as any).children.map((child: string, childIdx: number) => (
                           <motion.li
                             key={child}
                             initial={{ opacity: 0, x: -10 }}

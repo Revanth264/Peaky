@@ -37,7 +37,6 @@ const itemVariants = {
     scale: 1,
     transition: {
       duration: 0.35,
-      ease: [0.16, 1, 0.3, 1],
     },
   },
 }
@@ -50,7 +49,7 @@ export function UnifiedAuthModal({ onClose, onAuthModeChange }: UnifiedAuthModal
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (user && !isLoading && user.emailVerified) {
+    if (user && !isLoading && (user as any).emailVerified) {
       const displayName = user.name || user.email?.split('@')[0] || 'User'
       toast.success(`Welcome, ${displayName}!`, {
         duration: 3000,
@@ -88,7 +87,7 @@ export function UnifiedAuthModal({ onClose, onAuthModeChange }: UnifiedAuthModal
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35 }}
             className="space-y-8"
           >
             {/* OAuth Providers */}
@@ -99,7 +98,7 @@ export function UnifiedAuthModal({ onClose, onAuthModeChange }: UnifiedAuthModal
               <motion.p
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.15, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.15, duration: 0.4 }}
                 className="text-sm text-center text-gray-600 dark:text-gray-300 font-semibold uppercase tracking-wider mb-3"
               >
                 Quick Sign In
@@ -117,7 +116,7 @@ export function UnifiedAuthModal({ onClose, onAuthModeChange }: UnifiedAuthModal
                 <motion.span
                   initial={{ scaleX: 0, opacity: 0 }}
                   animate={{ scaleX: 1, opacity: 1 }}
-                  transition={{ delay: 0.35, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.35, duration: 0.5 }}
                   className="w-full border-t border-gray-200 dark:border-gray-700"
                 />
               </div>
@@ -125,7 +124,7 @@ export function UnifiedAuthModal({ onClose, onAuthModeChange }: UnifiedAuthModal
                 <motion.span
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.4, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.4, duration: 0.4 }}
                   className="bg-white/95 dark:bg-black/95 px-4 text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider backdrop-blur-sm"
                 >
                   Or continue with
@@ -163,7 +162,7 @@ export function UnifiedAuthModal({ onClose, onAuthModeChange }: UnifiedAuthModal
             initial={{ opacity: 0, x: 20, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -20, scale: 0.95 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4 }}
           >
             <ForgotPassword onBack={() => setView('auth')} />
           </motion.div>

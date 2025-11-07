@@ -111,7 +111,7 @@ export default function ProductsPage() {
 
   // Get category for subcategories
   const currentCategory = NAV_CATEGORIES.find(cat => cat.key === selectedCategory)
-  const subcategories = currentCategory?.children || []
+  const subcategories: string[] = currentCategory && 'children' in currentCategory ? (currentCategory as any).children as string[] : []
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 py-6 sm:py-8">
@@ -131,7 +131,7 @@ export default function ProductsPage() {
                 <div>
                   <label className="block text-xs font-medium mb-3 text-gray-900 dark:text-white uppercase tracking-wider">Categories</label>
                   <div className="space-y-1.5">
-                          {NAV_CATEGORIES.filter(cat => cat.children).map((category) => (
+                          {NAV_CATEGORIES.filter((cat): cat is any => 'children' in cat).map((category) => (
                             <button
                               key={category.key}
                               onClick={() => handleCategoryChange(category.key)}

@@ -15,6 +15,23 @@ declare global {
   }
 }
 
+type CartItemWithVariants = {
+  _id?: string
+  productId?: string
+  id?: string
+  quantity: number
+}
+
+function toOrderItem(item: CartItemWithVariants) {
+  const id = item._id ?? item.productId ?? item.id
+  if (!id) throw new Error('Cart item missing id')
+  return {
+    _id: id,
+    productId: id,
+    quantity: item.quantity,
+  }
+}
+
 export default function CheckoutPage() {
   const { cartItems, getTotalPrice, clearCart } = useCart()
   const { user, getIdToken } = useAuth()
@@ -22,6 +39,16 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
   const [addresses, setAddresses] = useState<any[]>([])
+  const [address, setAddress] = useState({
+    name: '',
+    phone: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    pincode: '',
+    country: '',
+  })
   
   useEffect(() => {
     if (user?.addresses && user.addresses.length > 0) {
@@ -70,11 +97,7 @@ export default function CheckoutPage() {
       const response = await axios.post(
         '/api/payment/create-order',
         {
-          items: cartItems.map(item => ({
-            _id: item._id || item.productId,
-            productId: item._id || item.productId,
-            quantity: item.quantity,
-          })),
+          items: cartItems.map(toOrderItem),
           shippingAddressId: selectedAddressId,
           billingAddressId: selectedAddressId,
         },

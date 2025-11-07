@@ -28,8 +28,7 @@ export function ForgotPassword({ onBack }: ForgotPasswordProps) {
     try {
       await resetPassword(email)
 
-      toast.success('Password reset email sent!', {
-        description: 'Check your inbox for the reset link',
+      toast.success('Password reset email sent! Check your inbox for the reset link', {
         duration: 4000,
       })
       setStep('email-sent')

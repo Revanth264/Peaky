@@ -38,7 +38,6 @@ const fieldVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
     },
   },
 }
@@ -439,7 +438,7 @@ export function MobileAuth({ onClose }: MobileAuthProps) {
             initial={{ opacity: 0, x: 20, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -20, scale: 0.95 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5 }}
             onSubmit={handleVerifyOTP}
             className="space-y-4"
           >

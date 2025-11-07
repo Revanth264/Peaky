@@ -1,7 +1,7 @@
-import { forwardRef, ButtonHTMLAttributes } from 'react'
-import { motion } from 'framer-motion'
+import { forwardRef } from 'react'
+import { motion, type HTMLMotionProps } from 'framer-motion'
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = HTMLMotionProps<'button'> & {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
 }
@@ -40,7 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
-          {children}
+          {children as any}
         </span>
         {variant === 'primary' || variant === 'danger' ? (
           <motion.div
